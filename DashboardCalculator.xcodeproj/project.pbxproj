@@ -14,6 +14,17 @@
 		DC89EA682794932700F11E97 /* DashboardCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA672794932700F11E97 /* DashboardCalculatorTests.swift */; };
 		DC89EA722794932700F11E97 /* DashboardCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA712794932700F11E97 /* DashboardCalculatorUITests.swift */; };
 		DC89EA742794932700F11E97 /* DashboardCalculatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA732794932700F11E97 /* DashboardCalculatorUITestsLaunchTests.swift */; };
+		DC89EA812794967900F11E97 /* SmallButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA802794967900F11E97 /* SmallButton.swift */; };
+		DC89EA832794995400F11E97 /* BigButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA822794995400F11E97 /* BigButton.swift */; };
+		DC89EA8527949C0100F11E97 /* Seven Segment.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC89EA8427949C0100F11E97 /* Seven Segment.ttf */; };
+		DC89EA8627949C0100F11E97 /* Seven Segment.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC89EA8427949C0100F11E97 /* Seven Segment.ttf */; };
+		DC89EA8727949C0100F11E97 /* Seven Segment.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC89EA8427949C0100F11E97 /* Seven Segment.ttf */; };
+		DC89EA8B27949F0A00F11E97 /* Cooper Black Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC89EA8A27949F0A00F11E97 /* Cooper Black Regular.ttf */; };
+		DC89EA8C27949F0A00F11E97 /* Cooper Black Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC89EA8A27949F0A00F11E97 /* Cooper Black Regular.ttf */; };
+		DC89EA8D27949F0A00F11E97 /* Cooper Black Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DC89EA8A27949F0A00F11E97 /* Cooper Black Regular.ttf */; };
+		DC89EA8F2794A2ED00F11E97 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA8E2794A2ED00F11E97 /* Calculator.swift */; };
+		DC89EA902794A2ED00F11E97 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA8E2794A2ED00F11E97 /* Calculator.swift */; };
+		DC89EA912794A2ED00F11E97 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA8E2794A2ED00F11E97 /* Calculator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +56,12 @@
 		DC89EA6D2794932700F11E97 /* DashboardCalculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DashboardCalculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC89EA712794932700F11E97 /* DashboardCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCalculatorUITests.swift; sourceTree = "<group>"; };
 		DC89EA732794932700F11E97 /* DashboardCalculatorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardCalculatorUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		DC89EA802794967900F11E97 /* SmallButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallButton.swift; sourceTree = "<group>"; };
+		DC89EA822794995400F11E97 /* BigButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BigButton.swift; sourceTree = "<group>"; };
+		DC89EA8427949C0100F11E97 /* Seven Segment.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Seven Segment.ttf"; sourceTree = "<group>"; };
+		DC89EA8827949CEE00F11E97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		DC89EA8A27949F0A00F11E97 /* Cooper Black Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Cooper Black Regular.ttf"; sourceTree = "<group>"; };
+		DC89EA8E2794A2ED00F11E97 /* Calculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,8 +112,13 @@
 		DC89EA542794932500F11E97 /* DashboardCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				DC89EA8927949D3700F11E97 /* Fonts */,
+				DC89EA8827949CEE00F11E97 /* Info.plist */,
 				DC89EA552794932500F11E97 /* DashboardCalculatorApp.swift */,
 				DC89EA572794932500F11E97 /* ContentView.swift */,
+				DC89EA802794967900F11E97 /* SmallButton.swift */,
+				DC89EA822794995400F11E97 /* BigButton.swift */,
+				DC89EA8E2794A2ED00F11E97 /* Calculator.swift */,
 				DC89EA592794932600F11E97 /* Assets.xcassets */,
 				DC89EA5E2794932600F11E97 /* DashboardCalculator.entitlements */,
 				DC89EA5B2794932600F11E97 /* Preview Content */,
@@ -127,6 +149,15 @@
 				DC89EA732794932700F11E97 /* DashboardCalculatorUITestsLaunchTests.swift */,
 			);
 			path = DashboardCalculatorUITests;
+			sourceTree = "<group>";
+		};
+		DC89EA8927949D3700F11E97 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				DC89EA8A27949F0A00F11E97 /* Cooper Black Regular.ttf */,
+				DC89EA8427949C0100F11E97 /* Seven Segment.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,8 +264,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC89EA8527949C0100F11E97 /* Seven Segment.ttf in Resources */,
 				DC89EA5D2794932600F11E97 /* Preview Assets.xcassets in Resources */,
 				DC89EA5A2794932600F11E97 /* Assets.xcassets in Resources */,
+				DC89EA8B27949F0A00F11E97 /* Cooper Black Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +275,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC89EA8627949C0100F11E97 /* Seven Segment.ttf in Resources */,
+				DC89EA8C27949F0A00F11E97 /* Cooper Black Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +284,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC89EA8727949C0100F11E97 /* Seven Segment.ttf in Resources */,
+				DC89EA8D27949F0A00F11E97 /* Cooper Black Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,7 +296,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC89EA832794995400F11E97 /* BigButton.swift in Sources */,
+				DC89EA812794967900F11E97 /* SmallButton.swift in Sources */,
 				DC89EA582794932500F11E97 /* ContentView.swift in Sources */,
+				DC89EA8F2794A2ED00F11E97 /* Calculator.swift in Sources */,
 				DC89EA562794932500F11E97 /* DashboardCalculatorApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -269,6 +309,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC89EA682794932700F11E97 /* DashboardCalculatorTests.swift in Sources */,
+				DC89EA902794A2ED00F11E97 /* Calculator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -278,6 +319,7 @@
 			files = (
 				DC89EA722794932700F11E97 /* DashboardCalculatorUITests.swift in Sources */,
 				DC89EA742794932700F11E97 /* DashboardCalculatorUITestsLaunchTests.swift in Sources */,
+				DC89EA912794A2ED00F11E97 /* Calculator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +466,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"DashboardCalculator/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DashboardCalculator/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -449,6 +492,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"DashboardCalculator/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = DashboardCalculator/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
