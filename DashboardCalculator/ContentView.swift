@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct EmptyCalc: Calculator {
+    func isSetSymbol(symbol: String) -> Bool {
+        return false 
+    }
+    
     func updateExpression(symbol: String) {
         
     }
@@ -53,6 +57,11 @@ struct ContentView: View, Calculator {
     @State var operation: String = ""
     @State var state = CalculatorState.Empty
     
+    func isSetSymbol(symbol: String) -> Bool {
+        operation == symbol
+    }
+
+    
     var body: some View {
         
         
@@ -63,7 +72,6 @@ struct ContentView: View, Calculator {
                     .frame(width: innerWidth, height: 40, alignment: .trailing)
                     .font(.custom("Seven Segment", size: 26))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
-//                    .background(Color.cyan)
                     .background(Image("screen").resizable().scaledToFill())
                     .foregroundColor(.black)
                     .clipShape(RoundedRectangle(cornerRadius: 5.0))
@@ -177,6 +185,9 @@ struct ContentView: View, Calculator {
                 currentExpression = String(answer)
                 operation = symbol
                 state = .DisplayingIntermediateResult
+            } else if state == .DisplayingResult {
+                operation = symbol
+                state = .AwaitingNextNumber
             }
         } else if symbol == "c" {
             currentExpression = ""

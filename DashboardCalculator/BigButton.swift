@@ -14,14 +14,16 @@ struct BigButton: View {
     
     
     var body: some View {
-        Text(text)
+
+        
+         Text(text)
             .frame(width: BigButton.diameter, height: BigButton.diameter, alignment: .center)
-            .font(.custom("Helvetica Neue Bold", size: 18))
-            .background(Image("button")
+            .font(Font.custom("Helvetica Neue", size: 16))
+            .background(
+                Image("button", bundle: Bundle.main)
                             .resizable()
-                            .frame(width: BigButton.diameter, height: BigButton.diameter)
-                            
-                            .clipShape(Circle()))
+                            .clipShape(Circle())
+            )
             .foregroundColor(Color.gray)
             .clipShape(Circle())
             .onTapGesture {

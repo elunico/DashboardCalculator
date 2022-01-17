@@ -14,12 +14,17 @@ struct SmallButton: View {
     
     
     var body: some View {
-        Text(text)
+        let buttonImageName = delegate.isSetSymbol(symbol: text) ? "SelectedButton" : "button"
+        
+        return Text(text)
             .frame(width: SmallButton.diameter, height: SmallButton.diameter, alignment: .center)
-            .font(.custom("Helvetica Neue Bold", size: 12))
-            .background(Image("button", bundle: Bundle.main)
-                            .resizable()
-                            .clipShape(Circle()))
+            .font(.custom("Helvetica Neue", size: 12))
+            .background(
+                    Image(buttonImageName)
+                    .resizable()
+                    .frame(width: BigButton.diameter, height: BigButton.diameter)
+                    .clipShape(Circle())
+                )
             .frame(width: SmallButton.diameter, height: SmallButton.diameter, alignment: .center)
             .foregroundColor(Color.gray)
             .clipShape(Circle())

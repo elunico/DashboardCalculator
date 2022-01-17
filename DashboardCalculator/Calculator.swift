@@ -10,5 +10,6 @@ import Foundation
 protocol Calculator {
     func updateExpression(symbol: String)
     
+    func isSetSymbol(symbol: String) -> Bool 
 
 }
