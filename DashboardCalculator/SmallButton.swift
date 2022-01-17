@@ -9,12 +9,12 @@ import SwiftUI
 
 struct SmallButton: View {
     let text: String
-    let delegate: Calculator
+    @ObservedObject var delegate: Calculator
     static let diameter = 27.0
     
     
     var body: some View {
-        let buttonImageName = delegate.isSetSymbol(symbol: text) ? "SelectedButton" : "button"
+        let buttonImageName = delegate.isActive(operation: text) ? "SelectedButton" : "button"
         
         return Text(text)
             .frame(width: SmallButton.diameter, height: SmallButton.diameter, alignment: .center)
@@ -29,7 +29,7 @@ struct SmallButton: View {
             .foregroundColor(Color.gray)
             .clipShape(Circle())
             .onTapGesture {
-                delegate.sendInput(symbol: text)
+                delegate.fire(key: text)
             }
             
     }
@@ -37,6 +37,6 @@ struct SmallButton: View {
 
 struct SmallButton_Previews: PreviewProvider {
     static var previews: some View {
-        SmallButton(text: "Test", delegate: EmptyCalc())
+        SmallButton(text: "Test", delegate: Calculator())
     }
 }

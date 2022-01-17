@@ -27,13 +27,13 @@ struct BigButton: View {
             .foregroundColor(Color.gray)
             .clipShape(Circle())
             .onTapGesture {
-                delegate.sendInput(symbol: text)
+                delegate.fire(key: text)
             }
     }
 }
 
 struct BigButton_Previews: PreviewProvider {
     static var previews: some View {
-        BigButton(text: "Test", delegate: EmptyCalc())
+        BigButton(text: "Test", delegate: Calculator())
     }
 }
