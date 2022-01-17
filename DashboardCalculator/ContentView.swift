@@ -132,6 +132,7 @@ struct ContentView: View, Calculator {
                     }
                 }
                 Spacer().frame(width: innerWidth, height: 5, alignment: .bottom)
+                
             
             }
             .background(Color.gray)
@@ -180,7 +181,10 @@ struct ContentView: View, Calculator {
                 currentExpression = format(answer)
                 operation = symbol
                 state = .DisplayingIntermediateResult
-            } else if state == .DisplayingIntermediateResult {
+            } else if state == .DisplayingIntermediateResult || state == .AwaitingNextNumber {
+                if state == .AwaitingNextNumber {
+                    previousExpression = currentExpression
+                }
                 guard let answer = evaluateOperation() else { return }
                 currentExpression = format(answer)
                 operation = symbol
@@ -194,6 +198,9 @@ struct ContentView: View, Calculator {
             previousExpression = ""
             operation = ""
         } else if symbol == "=" {
+            if state == .AwaitingNextNumber {
+                previousExpression = currentExpression
+            }
             guard let answer = evaluateOperation() else { return }
             previousExpression = ""
             currentExpression = format(answer)
