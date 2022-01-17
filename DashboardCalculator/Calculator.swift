@@ -10,7 +10,5 @@ import Foundation
 protocol Calculator {
     func updateExpression(symbol: String)
     
-    func operate(with symbol: String)
-    
-    func computeOperation() 
+
 }

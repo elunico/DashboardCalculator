@@ -16,18 +16,22 @@ struct SmallButton: View {
     var body: some View {
         Text(text)
             .frame(width: SmallButton.diameter, height: SmallButton.diameter, alignment: .center)
-            .font(.custom("Helvetica Neue Bold", size: 10))
-            .background(.white)
+            .font(.custom("Helvetica Neue Bold", size: 12))
+            .background(Image("button", bundle: Bundle.main)
+                            .resizable()
+                            .clipShape(Circle()))
+            .frame(width: SmallButton.diameter, height: SmallButton.diameter, alignment: .center)
             .foregroundColor(Color.gray)
             .clipShape(Circle())
             .onTapGesture {
                 delegate.updateExpression(symbol: text)
             }
+            
     }
 }
 
-//struct SmallButton_Previews: PreviewProvider {
-//    static var previews: some View {
-////        SmallButton(text: "Test") { print("Testing") }
-//    }
-//}
+struct SmallButton_Previews: PreviewProvider {
+    static var previews: some View {
+        SmallButton(text: "Test", delegate: EmptyCalc())
+    }
+}
