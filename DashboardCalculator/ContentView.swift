@@ -123,7 +123,7 @@ struct ContentView: View, Calculator {
                         Text("=")
                             .frame(width: SmallButton.diameter, height: 70.0, alignment: .center)
                             .font(.custom("Monaco", size: 10))
-                            .background(.white)
+                            .background(Color.white)
                             .foregroundColor(Color.gray)
                             .clipShape(RoundedRectangle(cornerSize: CGSize(width: SmallButton.diameter/2, height: SmallButton.diameter/2)))
                             .onTapGesture {
@@ -177,12 +177,12 @@ struct ContentView: View, Calculator {
             } else if state == .InputtingSecondNumber {
                 guard let answer = evaluateOperation() else { return }
                 previousExpression = currentExpression
-                currentExpression = String(answer)
+                currentExpression = format(answer)
                 operation = symbol
                 state = .DisplayingIntermediateResult
             } else if state == .DisplayingIntermediateResult {
                 guard let answer = evaluateOperation() else { return }
-                currentExpression = String(answer)
+                currentExpression = format(answer)
                 operation = symbol
                 state = .DisplayingIntermediateResult
             } else if state == .DisplayingResult {
@@ -196,10 +196,22 @@ struct ContentView: View, Calculator {
         } else if symbol == "=" {
             guard let answer = evaluateOperation() else { return }
             previousExpression = ""
-            currentExpression = String(answer)
+            currentExpression = format(answer)
             operation = ""
             state = .DisplayingResult
         }
+    }
+    
+    fileprivate func format(_ answer: Double) -> String {
+        var string = String(answer)
+        
+        assert(string.contains("."), "Calculator result string does not contain a . and formatting will produce a wrong answer")
+        
+        while string.count > 13 && string.last != "." {
+            string.removeLast()
+        }
+        
+        return string
     }
     
     fileprivate func evaluateOperation() -> Double? {
