@@ -29,7 +29,7 @@ struct SmallButton: View {
             .foregroundColor(Color.gray)
             .clipShape(Circle())
             .onTapGesture {
-                delegate.updateExpression(symbol: text)
+                delegate.sendInput(symbol: text)
             }
             
     }

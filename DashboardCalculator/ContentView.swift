@@ -9,10 +9,10 @@ import SwiftUI
 
 struct EmptyCalc: Calculator {
     func isSetSymbol(symbol: String) -> Bool {
-        return false 
+        return false
     }
     
-    func updateExpression(symbol: String) {
+    func sendInput(symbol: String) {
         
     }
     
@@ -51,7 +51,9 @@ let innerWidth = 175.0
 let outerHeight = 295.0
 let innerHeight = 285.0
 
+
 struct ContentView: View, Calculator {
+    
     @State var previousExpression: String = ""
     @State var currentExpression: String = ""
     @State var operation: String = ""
@@ -60,8 +62,8 @@ struct ContentView: View, Calculator {
     func isSetSymbol(symbol: String) -> Bool {
         operation == symbol
     }
-
     
+
     var body: some View {
         
         
@@ -85,7 +87,7 @@ struct ContentView: View, Calculator {
                     SmallButton(text: "mc", delegate: self)
                     SmallButton(text: "mr", delegate: self)
                     SmallButton(text: "÷", delegate: self)
-
+                    
                 }
                 
                 HStack(spacing: 2.0) {
@@ -127,28 +129,30 @@ struct ContentView: View, Calculator {
                             .foregroundColor(Color.gray)
                             .clipShape(RoundedRectangle(cornerSize: CGSize(width: SmallButton.diameter/2, height: SmallButton.diameter/2)))
                             .onTapGesture {
-                                updateExpression(symbol: "=")
+                                sendInput(symbol: "=")
                             }
                     }
                 }
                 Spacer().frame(width: innerWidth, height: 5, alignment: .bottom)
                 
-            
+                
             }
             .background(Color.gray)
             .clipShape(RoundedRectangle(cornerRadius: 10.0))
-
+            
             .position(x: outerWidth/2, y: outerHeight/2)
             .frame(width: innerWidth, height: innerHeight, alignment: .bottom)
+            
             
         }
         .frame(width: outerWidth, height: outerHeight, alignment: .center)
         .background(theOrange)
         .clipShape(RoundedRectangle(cornerRadius: 10.0))
         
+        
     }
     
-    func updateExpression(symbol: String) {
+    func sendInput(symbol: String) {
         print(symbol)
         if "1234567890.".contains(symbol) {
             if state == .Empty {
