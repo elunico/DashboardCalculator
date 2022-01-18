@@ -146,15 +146,15 @@ class Calculator: ObservableObject {
         assert(string.contains("."), "Calculator result string does not contain a . and formatting will produce a wrong answer")
 
         if string.hasSuffix(".0") {
-            string = String(string[string.startIndex..<string.index(string.endIndex, offsetBy: -2)])
+            return String(string[string.startIndex..<string.index(string.endIndex, offsetBy: -2)])
+        } else if !string.contains("e") {
+            while string.count > Calculator.MAX_DIGITS && string.last != "." {
+                string.removeLast()
+            }
+            return string
+        } else {
+            return string
         }
-        
-        
-        while string.count > Calculator.MAX_DIGITS && string.last != "." {
-            string.removeLast()
-        }
-        
-        return string
     }
     
     func evaluateOperation() -> Double? {
