@@ -49,6 +49,7 @@ class Calculator: ObservableObject {
     var operation: String = ""
     var state = CalculatorState.Empty
     var previousState: CalculatorState? = .Empty
+    private(set) var lastKeyPressed: String? = nil
     
     var memory: Double = 0.0
     
@@ -65,6 +66,7 @@ class Calculator: ObservableObject {
     
     func fire(key: String) {
         print(key)
+        lastKeyPressed = key
         if "1234567890.".contains(key) {
             if state == .Empty {
                 currentExpression += key
@@ -140,10 +142,14 @@ class Calculator: ObservableObject {
     
     func format(_ answer: Double) -> String {
         var string = String(answer)
-        
         assert(string.contains("."), "Calculator result string does not contain a . and formatting will produce a wrong answer")
+
+        if string.hasSuffix(".0") {
+            string = String(string[string.startIndex..<string.index(string.endIndex, offsetBy: -2)])
+        }
         
-        while string.count > 13 && string.last != "." {
+        
+        while string.count > 15 && string.last != "." {
             string.removeLast()
         }
         

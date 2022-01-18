@@ -8,6 +8,24 @@
 import Combine
 import SwiftUI
 
+//https://stackoverflow.com/questions/64823492/how-to-open-another-window-in-swiftui-macos
+extension View {
+    
+    @discardableResult
+    func openInWindow(title: String, sender: Any?) -> NSWindow {
+        let controller = NSHostingController(rootView: self)
+        let win = NSWindow(contentViewController: controller)
+        var frame = win.frame
+        frame.size = CGSize(width: 640, height: 480)
+        frame.origin = CGPoint(x: 10, y: 10)
+        win.setFrame(frame, display: true, animate: true)
+        win.contentViewController = controller
+        win.title = title
+        win.makeKeyAndOrderFront(sender)
+        
+        return win
+    }
+}
 
 let theOrange = Color(.displayP3, red: 0.9, green: 0.4, blue: 0.2, opacity: 1.0)
 
@@ -27,7 +45,7 @@ struct ContentView: View {
                 
                 Text(calculator.currentExpression.isEmpty ? "0" : calculator.currentExpression)
                     .frame(width: innerWidth, height: 40, alignment: .trailing)
-                    .font(.custom("Seven Segment", size: 26))
+                    .font(.custom("Helvetica Neue", size: 20))
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
                     .background(Image("screen").resizable().scaledToFill())
                     .foregroundColor(.black)
@@ -88,6 +106,11 @@ struct ContentView: View {
                             }
                     }
                 }
+                #if DEBUG
+                Button("Debug View"){
+                    DebugView(calculator: calculator).openInWindow(title: "DebugView", sender: self)
+                }
+                #endif
                 Spacer().frame(width: innerWidth, height: 5, alignment: .bottom)
                 
                 
