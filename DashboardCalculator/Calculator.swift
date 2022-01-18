@@ -43,6 +43,7 @@ class Calculator: ObservableObject {
         return operation == self.operation
     }
     
+    static let MAX_DIGITS = 15
     
     var previousExpression: String = ""
     var currentExpression: String = ""
@@ -71,9 +72,9 @@ class Calculator: ObservableObject {
             if state == .Empty {
                 currentExpression += key
                 updateState(.InputtingFirstNumber)
-            }else if state == .InputtingFirstNumber || state == .InputtingSecondNumber {
+            } else if (state == .InputtingFirstNumber || state == .InputtingSecondNumber) && currentExpression.count < Calculator.MAX_DIGITS {
                 currentExpression += key
-            }else if state == .AwaitingNextNumber || state == .DisplayingIntermediateResult  {
+            } else if state == .AwaitingNextNumber || state == .DisplayingIntermediateResult  {
                 previousExpression = currentExpression
                 currentExpression = key
                 updateState(.InputtingSecondNumber)
@@ -149,7 +150,7 @@ class Calculator: ObservableObject {
         }
         
         
-        while string.count > 15 && string.last != "." {
+        while string.count > Calculator.MAX_DIGITS && string.last != "." {
             string.removeLast()
         }
         

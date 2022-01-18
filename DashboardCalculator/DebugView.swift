@@ -18,7 +18,7 @@ struct DebugVar: View {
             .fontWeight(.bold)
             .font(.system(size: 16.0))
             .foregroundColor(.gray)
-            .frame(width: 200, height: 60, alignment: .trailing)
+            .frame(width: 200, height: 40, alignment: .trailing)
     }
 }
 
@@ -31,7 +31,7 @@ struct DebugValue: View {
     var body: some View {
         Text(text)
             .font(.system(size: 16.0))
-            .frame(width: 200, height: 60, alignment: .leading)
+            .frame(width: 200, height: 40, alignment: .leading)
     }
 }
 
@@ -64,6 +64,10 @@ struct DebugView: View {
                 HStack {
                     DebugVar("Last key pressed: ")
                     DebugValue(calculator.lastKeyPressed ?? "<nil>")
+                }
+                HStack {
+                    DebugVar("Memory: ")
+                    DebugValue(calculator.memory.description)
                 }
                 
             }
