@@ -1,5 +1,9 @@
 # DashboardCalculator
 
+## Release 0.1.0
+Check releases to download an app (not signed)
+
+
 
 ![alt text](https://github.com/elunico/DashboardCalculator/blob/main/icon.png?raw=true)
 
