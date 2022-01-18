@@ -10,6 +10,7 @@ import Foundation
 enum CalculatorState: CustomStringConvertible {
     case Empty
     case InputtingFirstNumber
+    case DisplayingMemoryRecall
     case AwaitingNextNumber
     case InputtingSecondNumber
     case DisplayingIntermediateResult
@@ -21,6 +22,8 @@ enum CalculatorState: CustomStringConvertible {
             return "Empty"
         case .InputtingFirstNumber:
             return "InputtingFirstNumber"
+        case .DisplayingMemoryRecall:
+            return "DisplayingMemoryRecall"
         case .AwaitingNextNumber:
             return "AwaitingNextNumber"
         case .InputtingSecondNumber:
@@ -45,40 +48,53 @@ class Calculator: ObservableObject {
     var currentExpression: String = ""
     var operation: String = ""
     var state = CalculatorState.Empty
+    var previousState: CalculatorState? = .Empty
+    
+    var memory: Double = 0.0
+    
+    func updateState(_ newState: CalculatorState) {
+        previousState = state
+        state = newState
+    }
+    
+    func popState() {
+        assert(previousState != nil, "Two pop states before changing states!")
+        state = previousState!
+        previousState = nil
+    }
     
     func fire(key: String) {
         print(key)
         if "1234567890.".contains(key) {
             if state == .Empty {
                 currentExpression += key
-                state = .InputtingFirstNumber}
-            else if state == .InputtingFirstNumber || state == .InputtingSecondNumber {
+                updateState(.InputtingFirstNumber)
+            }else if state == .InputtingFirstNumber || state == .InputtingSecondNumber {
                 currentExpression += key
-            }
-            else if state == .AwaitingNextNumber || state == .DisplayingIntermediateResult {
+            }else if state == .AwaitingNextNumber || state == .DisplayingIntermediateResult  {
                 previousExpression = currentExpression
                 currentExpression = key
-                state = .InputtingSecondNumber
+                updateState(.InputtingSecondNumber)
             } else if state == .DisplayingResult {
                 previousExpression = ""
                 currentExpression = key
-                state = .InputtingFirstNumber
+                updateState(.InputtingFirstNumber)
+            } else if state == .DisplayingMemoryRecall {
+                popState()
+                currentExpression = key
             }
-            
-            
-            
         } else if "+–⨉÷".contains(key) {
             if state == .Empty {
                 operation = key
-            } else if state == .InputtingFirstNumber {
+            } else if state == .InputtingFirstNumber || state == .DisplayingMemoryRecall{
                 operation = key
-                state = .AwaitingNextNumber
+                updateState(.AwaitingNextNumber)
             } else if state == .InputtingSecondNumber {
                 guard let answer = evaluateOperation() else { return }
                 previousExpression = currentExpression
                 currentExpression = format(answer)
                 operation = key
-                state = .DisplayingIntermediateResult
+                updateState(.DisplayingIntermediateResult)
             } else if state == .DisplayingIntermediateResult || state == .AwaitingNextNumber {
                 if state == .AwaitingNextNumber {
                     previousExpression = currentExpression
@@ -86,10 +102,10 @@ class Calculator: ObservableObject {
                 guard let answer = evaluateOperation() else { return }
                 currentExpression = format(answer)
                 operation = key
-                state = .DisplayingIntermediateResult
+                updateState(.DisplayingIntermediateResult)
             } else if state == .DisplayingResult {
                 operation = key
-                state = .AwaitingNextNumber
+                updateState(.AwaitingNextNumber)
             }
         } else if key == "c" {
             currentExpression = ""
@@ -103,7 +119,21 @@ class Calculator: ObservableObject {
             previousExpression = ""
             currentExpression = format(answer)
             operation = ""
-            state = .DisplayingResult
+            updateState(.DisplayingResult)
+        } else if ["m+", "m-", "mc", "mr"].contains(key) {
+            if key == "m+" {
+                guard let current = Double(currentExpression) else { return }
+                memory += current
+            } else if key == "m-" {
+                guard let current = Double(currentExpression) else { return }
+                memory -= current
+            } else if key == "mc" {
+                memory = 0.0
+            } else if key == "mr" {
+                previousExpression = currentExpression
+                currentExpression = format(memory)
+                updateState(.DisplayingMemoryRecall)
+            }
         }
         self.objectWillChange.send()
     }
