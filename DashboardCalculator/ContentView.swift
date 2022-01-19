@@ -33,7 +33,6 @@ extension View {
 struct ContentView: View {
     @ObservedObject var calculator = Calculator()
 
-    static let theOrange = Color(.displayP3, red: 0.85, green: 0.5, blue: 0.2, opacity: 1.0)
     static let EQUALS_DIAMETER = 50.0
     static let outerWidth = 165.0
     static let innerWidth = 145.0
@@ -44,7 +43,7 @@ struct ContentView: View {
         return GeometryReader { geometry in
             VStack(spacing: 2.0) {
                 
-                Text(calculator.currentExpression.isEmpty ? "0" : calculator.currentExpression)
+                Text(calculator.currentExpression)
                     
                     .frame(width: ContentView.innerWidth, height: 40, alignment: .trailing)
                     .font(.custom("Helvetica Neue", size: 20))
@@ -54,20 +53,23 @@ struct ContentView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 5.0))
                 #if DEBUG
                     .onTapGesture {
-                    DebugView(calculator: calculator).openInWindow(title: "DebugView", sender: self)
+                        DebugView(calculator: calculator).openInWindow(title: "DebugView", sender: self)
                     }
                 #endif
                 
                 Spacer()
                     .frame(width: ContentView.innerWidth + 5, height: 5, alignment: .center)
-                    .background(ContentView.theOrange)
-                Spacer().frame(width: ContentView.innerWidth + 5, height: 5, alignment: .center)
+                    .background(Color("bezelColor"))
+                
+                Spacer()
+                    .frame(width: ContentView.innerWidth + 5, height: 5, alignment: .center)
+                
                 HStack(spacing: 2.0) {
-                    SmallButton(text: "m+", delegate: calculator)
-                    SmallButton(text: "m-", delegate: calculator)
-                    SmallButton(text: "mc", delegate: calculator)
-                    SmallButton(text: "mr", delegate: calculator)
-                    SmallButton(text: "÷", delegate: calculator)
+                    SmallButton(text: "m+", owner: calculator)
+                    SmallButton(text: "m-", owner: calculator)
+                    SmallButton(text: "mc", owner: calculator)
+                    SmallButton(text: "mr", owner: calculator)
+                    SmallButton(text: "÷", owner: calculator)
                     
                 }
                 
@@ -76,38 +78,34 @@ struct ContentView: View {
                     VStack(spacing: 2.0) {
                         // 3x4 buttons
                         HStack(spacing: 2.0) {
-                            BigButton(text: "7", delegate: calculator)
-                            BigButton(text: "8", delegate: calculator)
-                            BigButton(text: "9", delegate: calculator)
+                            BigButton(text: "7", owner: calculator)
+                            BigButton(text: "8", owner: calculator)
+                            BigButton(text: "9", owner: calculator)
                         }
                         
                         HStack(spacing: 2.0) {
-                            BigButton(text: "4", delegate: calculator)
-                            BigButton(text: "5", delegate: calculator)
-                            BigButton(text: "6", delegate: calculator)
+                            BigButton(text: "4", owner: calculator)
+                            BigButton(text: "5", owner: calculator)
+                            BigButton(text: "6", owner: calculator)
                         }
                         HStack(spacing: 2.0) {
-                            BigButton(text: "1", delegate: calculator)
-                            BigButton(text: "2", delegate: calculator)
-                            BigButton(text: "3", delegate: calculator)
+                            BigButton(text: "1", owner: calculator)
+                            BigButton(text: "2", owner: calculator)
+                            BigButton(text: "3", owner: calculator)
                         }
                         HStack(spacing: 2.0) {
-                            BigButton(text: "0", delegate: calculator)
-                            BigButton(text: ".", delegate: calculator)
-                            BigButton(text: "c", delegate: calculator)
+                            BigButton(text: "0", owner: calculator)
+                            BigButton(text: ".", owner: calculator)
+                            BigButton(text: "c", owner: calculator)
                             
                         }
                     }
                     
-                    VStack( spacing: 3) {
-                        SmallButton(text: "⨉", delegate: calculator)
-                        SmallButton(text: "–", delegate: calculator)
-                        SmallButton(text: "+", delegate: calculator)
-                        Text("=")
-                            .frame(width: ContentView.EQUALS_DIAMETER-30, height: 60, alignment: .center)
-                            .font(.custom("Monaco", size: 10))
-                            .background(Color.white)
-                            .foregroundColor(Color.gray)
+                    VStack(spacing: 5) {
+                        SmallButton(text: "⨉", owner: calculator)
+                        SmallButton(text: "–", owner: calculator)
+                        SmallButton(text: "+", owner: calculator)
+                        Image("equal")
                             .clipShape(RoundedRectangle(cornerSize: CGSize(width: SmallButton.diameter/2, height: SmallButton.diameter/2)))
                             .onTapGesture {
                                 calculator.fire(key: "=")
@@ -118,18 +116,15 @@ struct ContentView: View {
                 Spacer()
                     .frame(width: ContentView.innerWidth, height: 5, alignment: .bottom)
                 
-                
             }
             .background(Color(white:0.75, opacity: 1.0))
             .clipShape(RoundedRectangle(cornerRadius: 10.0))
-            
             .position(x: ContentView.outerWidth/2, y: ContentView.outerHeight/2)
             .frame(width: ContentView.innerWidth, height: ContentView.innerHeight, alignment: .bottom)
             
-            
         }
         .frame(width: ContentView.outerWidth, height: ContentView.outerHeight, alignment: .center)
-        .background(ContentView.theOrange)
+        .background(Color("bezelColor"))
         .clipShape(RoundedRectangle(cornerRadius: 10.0))
     }
 }

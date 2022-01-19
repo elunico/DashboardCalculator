@@ -10,7 +10,7 @@ import SwiftUI
 struct BigButton: View {
     @State var clicked = false
     let text: String
-    let delegate: Calculator
+    let owner: Calculator
     static let diameter = 55.0
     
     func lookup(_ text: String) -> String {
@@ -26,31 +26,23 @@ struct BigButton: View {
         return name
     }
     
+    
     var body: some View {
-
-        
-         Image(lookup(text))
-            .frame( alignment: .center)
-//            .font(Font.custom("Helvetica Neue", size: 16))
-//            .background(
-//                Image("button", bundle: Bundle.main)
-//                            .resizable()
-//                            .clipShape(Circle())
-//            )
-//            .foregroundColor(Color.gray)
-            .clipShape(Circle())
-            .onTapGesture {
-                delegate.fire(key: text)
-            }.simultaneousGesture(DragGesture(minimumDistance: 0).onChanged {_ in
-                clicked = true
-            }.onEnded({_ in
-                clicked = false
-            }))
+            Image(lookup(text))
+                .frame( alignment: .center)
+                .clipShape(Circle())
+                .onTapGesture {
+                    owner.fire(key: text)
+                }.simultaneousGesture(DragGesture(minimumDistance: 0).onChanged {_ in
+                    clicked = true
+                }.onEnded({_ in
+                    clicked = false
+                }))
     }
 }
 
 struct BigButton_Previews: PreviewProvider {
     static var previews: some View {
-        BigButton(text: "Test", delegate: Calculator())
+        BigButton(text: "Test", owner: Calculator())
     }
 }

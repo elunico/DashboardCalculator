@@ -47,8 +47,8 @@ enum CalculatorState: CustomStringConvertible {
 
 class Calculator: ObservableObject {
     
-    func isActive(operation: String) -> Bool {
-        return operation == self.operation
+    func isPerformingOperation(representedBy string: String) -> Bool {
+        return string == self.operation
     }
     
     static let MAX_DIGITS = 12
@@ -130,7 +130,7 @@ class Calculator: ObservableObject {
                 operation = key
                 updateState(.AwaitingNextNumber)
             } else if state == .InputtingSecondNumber {
-                guard let answer = evaluateOperation() else { raiseError(); return }
+                guard let answer = evaluateOperation() else { return }
                 previousExpression = currentExpression
                 currentExpression = format(answer)
                 operation = key
@@ -139,7 +139,7 @@ class Calculator: ObservableObject {
                 if state == .AwaitingNextNumber {
                     previousExpression = currentExpression
                 }
-                guard let answer = evaluateOperation() else {  raiseError(); return }
+                guard let answer = evaluateOperation() else { return }
                 currentExpression = format(answer)
                 operation = key
                 updateState(.DisplayingIntermediateResult)
@@ -153,17 +153,17 @@ class Calculator: ObservableObject {
             if state == .AwaitingNextNumber {
                 previousExpression = currentExpression
             }
-            guard let answer = evaluateOperation() else {  raiseError(); return }
+            guard let answer = evaluateOperation() else { return }
             previousExpression = "0"
-            currentExpression = format(answer)
             operation = ""
+            currentExpression = format(answer)
             updateState(.DisplayingResult)
         } else if ["m+", "m-", "mc", "mr"].contains(key) {
             if key == "m+" {
-                guard let current = Double(currentExpression) else {  raiseError(); return }
+                guard let current = Double(currentExpression) else { return }
                 memory += current
             } else if key == "m-" {
-                guard let current = Double(currentExpression) else {  raiseError(); return }
+                guard let current = Double(currentExpression) else { return }
                 memory -= current
             } else if key == "mc" {
                 memory = 0.0
@@ -209,11 +209,14 @@ class Calculator: ObservableObject {
             answer = first * second
         case "÷":
             answer = first / second
+        case "":
+            return nil
         default:
             fatalError("Unknown operation \(operation)")
         }
         
         if answer > 1e300 || answer < -1e300 || answer < 1e-298 {
+            raiseError()
             return nil
         }
         

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SmallButton: View {
     let text: String
-    @ObservedObject var delegate: Calculator
+    @ObservedObject var owner: Calculator
     static let diameter = 27.0
     
     func lookup(_ text: String) -> String {
@@ -28,10 +28,9 @@ struct SmallButton: View {
     }
     
     var body: some View {
-//        let buttonImageName = delegate.isActive(operation: text) ? "SelectedButton" : "button"
-        
         var name = lookup(text)
-        if delegate.isActive(operation: text) {
+        
+        if owner.isPerformingOperation(representedBy: text) {
             name = "a" + name
         }
         
@@ -39,7 +38,7 @@ struct SmallButton: View {
             .frame(alignment: .center)
             .clipShape(Circle())
             .onTapGesture {
-                delegate.fire(key: text)
+                owner.fire(key: text)
             }
             
     }
@@ -47,6 +46,6 @@ struct SmallButton: View {
 
 struct SmallButton_Previews: PreviewProvider {
     static var previews: some View {
-        SmallButton(text: "Test", delegate: Calculator())
+        SmallButton(text: "Test", owner: Calculator())
     }
 }
