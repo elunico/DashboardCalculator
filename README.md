@@ -24,13 +24,7 @@ It was written in SwiftUI in Xcode 12 and was a very fun project, even though I 
 - Mouse/pointer support (keyboard support might be coming later)
 
 ## Known Issues
-- Buttons do not animate when pressed like they do on the original widget
-- If you follow the steps
-  - Input a number
-  - Press an operation
-  - Input the second number
-  - Press an operation
-  - Very large numbers display incorrectly (cut off with ellipses)
-
-    At this point, you will get an answer but, if you press another operation you would expect the calculator to do nothing but switch the operation it is *about to perform* but instead it will first perform the previous operation and then switch the operations. In other words, <code>5 + 6 + \*</code>  will result in 17 instead of the expected 11. This happens because going from <code>+</code> to <code>\*</code> results in performing the <code>+</code> operation when it shouldn't.
 - Sometimes all the operator buttons break and I am not sure why. Usually happens after you hit clear
+- Order of operations is... not quite right. It is up to you to do order of operations. If you type <code>5 + 6 \* 5</code> you will get 55 not the expected 30 (please don't sue me, I'm trying)
+- Switching operators is not supported. In other words, if you hit <code>5</code> then <code>+</code> then <code>÷</code>, it will perform the addition of <code>5 + 5</code> and be ready to to <code>10 ÷ </code> rather than hold 5 and switch the operation to <code>5 ÷ </code>
+
