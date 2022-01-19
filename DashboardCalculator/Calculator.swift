@@ -43,7 +43,7 @@ class Calculator: ObservableObject {
         return operation == self.operation
     }
     
-    static let MAX_DIGITS = 15
+    static let MAX_DIGITS = 13
     
     var previousExpression: String = ""
     var currentExpression: String = ""

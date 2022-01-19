@@ -8,27 +8,44 @@
 import SwiftUI
 
 struct BigButton: View {
+    @State var clicked = false
     let text: String
     let delegate: Calculator
-    static let diameter = 45.0
+    static let diameter = 55.0
     
+    func lookup(_ text: String) -> String {
+        var name = text
+        if name == "." {
+            name = "decimal"
+        }
+        
+        if clicked {
+            name = "d" + name
+        }
+        
+        return name
+    }
     
     var body: some View {
 
         
-         Text(text)
-            .frame(width: BigButton.diameter, height: BigButton.diameter, alignment: .center)
-            .font(Font.custom("Helvetica Neue", size: 16))
-            .background(
-                Image("button", bundle: Bundle.main)
-                            .resizable()
-                            .clipShape(Circle())
-            )
-            .foregroundColor(Color.gray)
+         Image(lookup(text))
+            .frame( alignment: .center)
+//            .font(Font.custom("Helvetica Neue", size: 16))
+//            .background(
+//                Image("button", bundle: Bundle.main)
+//                            .resizable()
+//                            .clipShape(Circle())
+//            )
+//            .foregroundColor(Color.gray)
             .clipShape(Circle())
             .onTapGesture {
                 delegate.fire(key: text)
-            }
+            }.simultaneousGesture(DragGesture(minimumDistance: 0).onChanged {_ in
+                clicked = true
+            }.onEnded({_ in
+                clicked = false
+            }))
     }
 }
 
