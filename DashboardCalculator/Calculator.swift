@@ -65,7 +65,7 @@ struct ActiveExpression {
             return "0"
         }
 
-        let intDigitCount = Int(log10(answer).rounded())
+        let intDigitCount = Int(log10(abs(answer)).rounded())
         
         // allow many digits until a limit than move to 1 digit, decimal, and scientific notation
         if intDigitCount < Calculator.MAX_DIGITS {
@@ -287,7 +287,8 @@ class Calculator: ObservableObject {
             fatalError("Unknown operation \(operation)")
         }
         
-        if answer > 1e300 || answer < -1e300 || answer < 1e-298 {
+        if answer > 1e300 || answer < -1e300 || (answer > 0 && answer < 1e-298) {
+            print("Over/underflow \(answer)")
             raiseError()
             return nil
         }
