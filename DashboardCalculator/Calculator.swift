@@ -44,6 +44,20 @@ enum CalculatorState: CustomStringConvertible {
     }
 }
 
+enum OperatorState: CustomStringConvertible {
+    case Empty
+    case Selected(operation: String)
+    
+    var description: String {
+        switch self {
+        case .Empty:
+            return "Empty"
+        case .Selected(let operation):
+            return "Selected(\(operation))"
+        }
+    }
+}
+
 struct ActiveExpression {
     var content: String
     var decimalSet = false
@@ -60,41 +74,15 @@ struct ActiveExpression {
         }
     }
     
-    func format(_ answer: Double) -> String {
-        if (answer == 0) {
-            return "0"
-        }
-
-        let intDigitCount = Int(log10(abs(answer)).rounded())
-        
-        // allow many digits until a limit than move to 1 digit, decimal, and scientific notation
-        if intDigitCount < Calculator.MAX_DIGITS {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-            formatter.alwaysShowsDecimalSeparator = decimalSet
-            formatter.hasThousandSeparators = true
-            formatter.maximumIntegerDigits = intDigitCount + 1
-            formatter.maximumFractionDigits = Calculator.MAX_DIGITS - formatter.maximumIntegerDigits
-            return formatter.string(from: NSNumber(value: answer))!
-        } else {
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .scientific
-            formatter.alwaysShowsDecimalSeparator = true
-            formatter.hasThousandSeparators = false
-            formatter.maximumIntegerDigits = 1
-            formatter.maximumFractionDigits = Calculator.MAX_DIGITS - 6 // 1 or 0 . then E+/-###
-            return formatter.string(from: NSNumber(value: answer))!
-        }
-    }
     
-    var formatted: String {
+    func formatted(formatter: (Double, Bool) -> String) -> String {
         if content == ActiveExpression.ERROR_STRING {
             return ActiveExpression.ERROR_STRING
         }
         if content.isEmpty {
             return "0"
         }
-        return format(doubleValue)
+        return formatter(doubleValue, decimalSet)
     }
     
     var count: Int {
@@ -131,20 +119,36 @@ struct ActiveExpression {
     }
 }
 
+func swap(_ first: inout Double, _ second: inout ActiveExpression) {
+    let temp = second.doubleValue
+    second = ActiveExpression(from: first)
+    first = temp
+}
 
 class Calculator: ObservableObject {
     
     func isPerformingOperation(representedBy string: String) -> Bool {
-        return string == self.operation
+        switch operatorState {
+        case .Empty:
+            return false
+        case .Selected(let operation):
+            return operation == string
+        }
+    }
+        
+    init(maxDigits: Int, formatter: @escaping (_ value: Double, _ decimalSet: Bool) -> String) {
+        self.formatter = formatter
+        self.currentExpression = ActiveExpression(content: "")
+        self.maxDigits = maxDigits
     }
     
-    static let MAX_DIGITS = 11
-    
+    var formatter: (_ value: Double, _ decimalSet: Bool) -> String
+    var maxDigits: Int
     var previousExpression: Double = 0.0
-    var currentExpression = ActiveExpression(content: "")
-    var operation: String = ""
+    var currentExpression: ActiveExpression
     var state = CalculatorState.Empty
     var previousState: CalculatorState? = .Empty
+    var operatorState: OperatorState = .Empty
     private(set) var lastKeyPressed: String? = nil
     
     var memory: Double = 0.0
@@ -163,9 +167,9 @@ class Calculator: ObservableObject {
     fileprivate func clearCalculator() {
         currentExpression.reset()
         previousExpression = 0.0
-        operation = ""
         updateState(.Empty)
         updateState(.Empty) // empty current and previous state
+        operatorState = .Empty
         lastKeyPressed = nil
     }
     
@@ -173,6 +177,14 @@ class Calculator: ObservableObject {
         updateState(.Error)
         self.currentExpression.raiseError()
         self.objectWillChange.send()
+    }
+    
+    func setOperation(to symbol: String?) {
+        if let operation = symbol {
+            operatorState = .Selected(operation: operation)
+        } else {
+            operatorState = .Empty
+        }
     }
     
     func fire(key: String) {
@@ -195,7 +207,7 @@ class Calculator: ObservableObject {
                 currentExpression.append(key)
                 updateState(.InputtingFirstNumber)
             } else if (state == .InputtingFirstNumber || state == .InputtingSecondNumber) {
-                if currentExpression.count == Calculator.MAX_DIGITS {
+                if currentExpression.count == maxDigits {
                     raiseError()
                 } else {
                     currentExpression.append(key)
@@ -214,27 +226,45 @@ class Calculator: ObservableObject {
             }
         } else if "+–⨉÷".contains(key) {
             if state == .Empty {
-                operation = key
+                setOperation(to: key)
                 updateState(.AwaitingNextNumber)
             } else if state == .InputtingFirstNumber || state == .DisplayingMemoryRecall{
-                operation = key
+                setOperation(to: key)
                 updateState(.AwaitingNextNumber)
             } else if state == .InputtingSecondNumber {
                 guard let answer = evaluateOperation() else { return }
                 previousExpression = currentExpression.doubleValue
                 currentExpression = ActiveExpression(from: answer)
-                operation = key
+                setOperation(to: key)
                 updateState(.DisplayingIntermediateResult)
             } else if state == .DisplayingIntermediateResult || state == .AwaitingNextNumber {
-                if state == .AwaitingNextNumber {
-                    previousExpression = currentExpression.doubleValue
+                switch operatorState {
+                case .Empty:
+                    break
+                case .Selected(let operation):
+                    if operation != key {
+                        setOperation(to: key)
+                    } else {
+                        if state == .AwaitingNextNumber {
+                            previousExpression = currentExpression.doubleValue
+                            guard let answer = evaluateOperation() else { return }
+                            currentExpression = ActiveExpression(from: answer)
+                            setOperation(to: key)
+                            updateState(.DisplayingIntermediateResult)
+                        } else {
+                            swap(&previousExpression, &currentExpression)
+                            guard let answer = evaluateOperation() else { return }
+                            swap(&previousExpression, &currentExpression)
+                            currentExpression = ActiveExpression(from: answer)
+                            setOperation(to: key)
+                            updateState(.DisplayingIntermediateResult)
+                        }
+                    }
                 }
-                guard let answer = evaluateOperation() else { return }
-                currentExpression = ActiveExpression(from: answer)
-                operation = key
-                updateState(.DisplayingIntermediateResult)
+                
+                
             } else if state == .DisplayingResult {
-                operation = key
+                setOperation(to: key)
                 updateState(.AwaitingNextNumber)
             }
         } else if key == "c" {
@@ -245,7 +275,7 @@ class Calculator: ObservableObject {
             }
             guard let answer = evaluateOperation() else { return }
             previousExpression = 0.0
-            operation = ""
+            setOperation(to: nil)
             currentExpression = ActiveExpression(from: answer)
             updateState(.DisplayingResult)
         } else if ["m+", "m-", "mc", "mr"].contains(key) {
@@ -272,19 +302,24 @@ class Calculator: ObservableObject {
         let answer: Double
         
         
-        switch operation {
-        case "+":
-            answer = first + second
-        case "–":
-            answer = first - second
-        case "⨉":
-            answer = first * second
-        case "÷":
-            answer = first / second
-        case "":
+        switch operatorState {
+        case .Empty:
             return nil
-        default:
-            fatalError("Unknown operation \(operation)")
+        case .Selected(let operation):
+            switch operation {
+            case "+":
+                answer = first + second
+            case "–":
+                answer = first - second
+            case "⨉":
+                answer = first * second
+            case "÷":
+                answer = first / second
+            case "":
+                return nil
+            default:
+                fatalError("Unknown operation \(operation)")
+            }
         }
         
         if answer > 1e300 || answer < -1e300 || (answer > 0 && answer < 1e-298) {

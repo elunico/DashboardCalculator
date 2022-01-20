@@ -25,8 +25,7 @@ It was written in SwiftUI in Xcode 12 and was a very fun project, even though I 
 
 ## Known Issues
 - Sometimes all the operator buttons break and I am not sure why. Usually happens after you hit clear
-- Order of operations is... not quite right. It is up to you to do order of operations. If you type <code>5 + 6 \* 5</code> you will get 55 not the expected 30 (please don't sue me, I'm trying)
-- Switching operators is not supported. In other words, if you hit <code>5</code> then <code>+</code> then <code>÷</code>, it will perform the addition of <code>5 + 5</code> and be ready to to <code>10 ÷ </code> rather than hold 5 and switch the operation to <code>5 ÷ </code>
+- ~Order of operations is... not quite right. It is up to you to do order of operations. If you type <code>5 + 6 \* 5</code> you will get 55 not the expected 30 (please don't sue me, I'm trying)
+    -  This is actually how the original Dashboard widget works... so maybe this is a feature not a bug 🤨
 - When you type a trailing 0 any time after the decimal point it does not show up visually. This is due to the formatter ignoring these 0s. The 0 is there but it is not shown, if you add more digits the 0 appears 
-- The font is not the 7-segment font of the widget but is instead just Helvetica Neue
 

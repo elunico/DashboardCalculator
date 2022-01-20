@@ -56,9 +56,10 @@ struct DebugView: View {
                 DebugProperty(key: "Current Expression", value: calculator.currentExpression)
                 DebugProperty(key: "Previous State", value: calculator.previousState)
                 DebugProperty(key: "Current State", value: calculator.state)
-                DebugProperty(key: "Operation", value: calculator.operation)
+                DebugProperty(key: "Operator State", value: calculator.operatorState)
                 DebugProperty(key: "Last Key Pressed", value: calculator.lastKeyPressed)
                 DebugProperty(key: "Memory", value: calculator.memory)
+
             }
         }
     }

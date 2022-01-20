@@ -17,7 +17,8 @@ extension View {
         let win = NSWindow(contentViewController: controller)
         var frame = win.frame
         frame.size = CGSize(width: 640, height: 480)
-        frame.origin = CGPoint(x: 10, y: 10)
+        print(frame.debugDescription)
+        frame.origin.x -= 840
         win.setFrame(frame, display: true, animate: true)
         win.contentViewController = controller
         win.title = title
@@ -27,11 +28,39 @@ extension View {
     }
 }
 
+func format(_ answer: Double, decimalSet: Bool) -> String {
+    if (answer == 0) {
+        return "0"
+    }
+
+    let intDigitCount = Int(log10(abs(answer)).rounded())
+    
+    // allow many digits until a limit than move to 1 digit, decimal, and scientific notation
+    if intDigitCount < ContentView.MAX_DIGITS {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.alwaysShowsDecimalSeparator = decimalSet
+        formatter.hasThousandSeparators = true
+        formatter.maximumIntegerDigits = intDigitCount + 1
+        formatter.maximumFractionDigits = ContentView.MAX_DIGITS - formatter.maximumIntegerDigits
+        return formatter.string(from: NSNumber(value: answer))!
+    } else {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .scientific
+        formatter.exponentSymbol = "e"
+        formatter.alwaysShowsDecimalSeparator = true
+        formatter.hasThousandSeparators = false
+        formatter.maximumIntegerDigits = 1
+        formatter.maximumFractionDigits = ContentView.MAX_DIGITS - 6 // 1 or 0 . then E+/-###
+        return formatter.string(from: NSNumber(value: answer))!
+    }
+}
 
 struct ContentView: View {
-    @ObservedObject var calculator = Calculator()
+    @ObservedObject var calculator = Calculator(maxDigits: ContentView.MAX_DIGITS, formatter: format)
 
     static let EQUALS_DIAMETER = 50.0
+    static let MAX_DIGITS = 11
 
     var body: some View {
         let width = 172.0
@@ -47,8 +76,10 @@ struct ContentView: View {
                     Image("lcd-backlight")
                         .fixedSize()
                     
-                    Text(calculator.currentExpression.formatted)
-                        .font(.custom("Helvetica Neue", size: 20))
+                    Text(calculator.currentExpression.formatted(formatter: format(_:decimalSet:)))
+//                        .font(.custom("Helvetica Neue", size: 20))
+                        .font(.custom("DB LCD Temp", size: 18))
+                        .lineSpacing(24)
                         .foregroundColor(.black)
                         .frame(width: width, alignment: .trailing)
                         .padding(.trailing, 35.0)
@@ -105,12 +136,9 @@ struct ContentView: View {
                         SmallButton(text: "⨉", owner: calculator)
                         SmallButton(text: "–", owner: calculator)
                         SmallButton(text: "+", owner: calculator)
-                        Image("equal")
-                            .clipShape(RoundedRectangle(cornerSize: CGSize(width: SmallButton.diameter/2, height: SmallButton.diameter/2)))
+                        SmallButton(text: "=", owner: calculator)
                             .offset(x: 0, y: -1)
-                            .onTapGesture {
-                                calculator.fire(key: "=")
-                            }
+                            
                     }.frame(alignment: .top)
                 }
 

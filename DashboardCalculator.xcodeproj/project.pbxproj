@@ -20,6 +20,10 @@
 		DC89EA8F2794A2ED00F11E97 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA8E2794A2ED00F11E97 /* Calculator.swift */; };
 		DC89EA902794A2ED00F11E97 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA8E2794A2ED00F11E97 /* Calculator.swift */; };
 		DC89EA912794A2ED00F11E97 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA8E2794A2ED00F11E97 /* Calculator.swift */; };
+		DCBF0CE82799A5680036CE7C /* DB LCD Temp-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCBF0CE72799A5680036CE7C /* DB LCD Temp-Black.ttf */; };
+		DCBF0CE92799A5680036CE7C /* DB LCD Temp-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCBF0CE72799A5680036CE7C /* DB LCD Temp-Black.ttf */; };
+		DCBF0CEA2799A5680036CE7C /* DB LCD Temp-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCBF0CE72799A5680036CE7C /* DB LCD Temp-Black.ttf */; };
+		DCBF0CEB2799A57D0036CE7C /* DB LCD Temp-Black.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = DCBF0CE72799A5680036CE7C /* DB LCD Temp-Black.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +43,19 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		DCBF0CE62799A54B0036CE7C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Fonts;
+			dstSubfolderSpec = 7;
+			files = (
+				DCBF0CEB2799A57D0036CE7C /* DB LCD Temp-Black.ttf in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		DC3D24AA27973BFA00FA5AC5 /* DebugView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugView.swift; sourceTree = "<group>"; };
 		DC89EA522794932500F11E97 /* DashboardCalculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DashboardCalculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -57,6 +74,7 @@
 		DC89EA8827949CEE00F11E97 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		DC89EA8E2794A2ED00F11E97 /* Calculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculator.swift; sourceTree = "<group>"; };
 		DC91DC63279542C100262454 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		DCBF0CE72799A5680036CE7C /* DB LCD Temp-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "DB LCD Temp-Black.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,6 +126,7 @@
 		DC89EA542794932500F11E97 /* DashboardCalculator */ = {
 			isa = PBXGroup;
 			children = (
+				DCBF0CE72799A5680036CE7C /* DB LCD Temp-Black.ttf */,
 				DC89EA8827949CEE00F11E97 /* Info.plist */,
 				DC89EA552794932500F11E97 /* DashboardCalculatorApp.swift */,
 				DC89EA572794932500F11E97 /* ContentView.swift */,
@@ -165,6 +184,7 @@
 				DC89EA4E2794932500F11E97 /* Sources */,
 				DC89EA4F2794932500F11E97 /* Frameworks */,
 				DC89EA502794932500F11E97 /* Resources */,
+				DCBF0CE62799A54B0036CE7C /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -259,6 +279,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCBF0CE82799A5680036CE7C /* DB LCD Temp-Black.ttf in Resources */,
 				DC89EA5D2794932600F11E97 /* Preview Assets.xcassets in Resources */,
 				DC89EA5A2794932600F11E97 /* Assets.xcassets in Resources */,
 			);
@@ -268,6 +289,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCBF0CE92799A5680036CE7C /* DB LCD Temp-Black.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +297,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DCBF0CEA2799A5680036CE7C /* DB LCD Temp-Black.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,18 +478,19 @@
 				CODE_SIGN_ENTITLEMENTS = DashboardCalculator/DashboardCalculator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2203A1347;
 				DEVELOPMENT_ASSET_PATHS = "\"DashboardCalculator/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DashboardCalculator/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tom.DashboardCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -483,18 +507,19 @@
 				CODE_SIGN_ENTITLEMENTS = DashboardCalculator/DashboardCalculator.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2203A1347;
 				DEVELOPMENT_ASSET_PATHS = "\"DashboardCalculator/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = DashboardCalculator/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tom.DashboardCalculator;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;

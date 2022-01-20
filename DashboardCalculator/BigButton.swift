@@ -42,6 +42,6 @@ struct BigButton: View {
 
 struct BigButton_Previews: PreviewProvider {
     static var previews: some View {
-        BigButton(text: "Test", owner: Calculator())
+        BigButton(text: "Test", owner: Calculator(maxDigits: 11, formatter: format))
     }
 }

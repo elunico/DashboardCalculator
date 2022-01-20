@@ -18,12 +18,19 @@ class DashboardCalculatorTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testExample() throws {
+    func testAddPositiveAndNegative() throws {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         // Any test you write for XCTest can be annotated as throws and async.
         // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
         // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
+        let calculator = Calculator(maxDigits: 11, formatter: format)
+        calculator.currentExpression = ActiveExpression(from: 10)
+        calculator.previousExpression = -5.0
+        calculator.operatorState = .Selected(operation: "+")
+        calculator.state = .InputtingSecondNumber
+        let answer = calculator.evaluateOperation()
+        XCTAssert(answer == 5.0, "Failed to add 10 and -5.0")
     }
 
     func testPerformanceExample() throws {
