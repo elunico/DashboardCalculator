@@ -28,72 +28,72 @@ extension View {
 }
 
 
-
-
 struct ContentView: View {
     @ObservedObject var calculator = Calculator()
 
     static let EQUALS_DIAMETER = 50.0
-    static let outerWidth = 165.0
-    static let innerWidth = 145.0
-    static let outerHeight = 260.0
-    static let innerHeight = 235.0
 
     var body: some View {
-        return GeometryReader { geometry in
-            VStack(spacing: 2.0) {
-                
-                Text(calculator.currentExpression)
+        let width = 172.0
+        let height = 248.0
+        
+        guard let backgroundImage = NSImage(named: "Calculator") else {
+            fatalError("A necessary asset is missing!")
+        }
+        
+        return
+            VStack(alignment: .center, spacing: 0.0) {
+                ZStack {
+                    Image("lcd-backlight")
+                        .fixedSize()
                     
-                    .frame(width: ContentView.innerWidth, height: 40, alignment: .trailing)
-                    .font(.custom("Helvetica Neue", size: 20))
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
-                    .background(Image("lcd-backlight").resizable().scaledToFill())
-                    .foregroundColor(.black)
-                    .clipShape(RoundedRectangle(cornerRadius: 5.0))
+                    Text(calculator.currentExpression.formatted)
+                        .font(.custom("Helvetica Neue", size: 20))
+                        .foregroundColor(.black)
+                        .frame(width: width, alignment: .trailing)
+                        .padding(.trailing, 35.0)
+                }.offset(x: 0, y: -5.0)
                 #if DEBUG
                     .onTapGesture {
                         DebugView(calculator: calculator).openInWindow(title: "DebugView", sender: self)
                     }
                 #endif
                 
-                Spacer()
-                    .frame(width: ContentView.innerWidth + 5, height: 5, alignment: .center)
-                    .background(Color("bezelColor"))
+                Spacer().frame(width: 5, height: 5, alignment: .center)
+                   
                 
-                Spacer()
-                    .frame(width: ContentView.innerWidth + 5, height: 5, alignment: .center)
-                
-                HStack(spacing: 2.0) {
+                let hSpacing = 0.0
+                HStack(spacing: hSpacing) {
                     SmallButton(text: "m+", owner: calculator)
                     SmallButton(text: "m-", owner: calculator)
                     SmallButton(text: "mc", owner: calculator)
                     SmallButton(text: "mr", owner: calculator)
                     SmallButton(text: "÷", owner: calculator)
+                        .offset(x: 0, y: -1)
                     
                 }
                 
-                HStack(spacing: 2.0) {
+                HStack(spacing: 0.0) {
                     
-                    VStack(spacing: 2.0) {
+                    VStack(spacing: 0.0) {
                         // 3x4 buttons
-                        HStack(spacing: 2.0) {
+                        HStack(spacing: hSpacing) {
                             BigButton(text: "7", owner: calculator)
                             BigButton(text: "8", owner: calculator)
                             BigButton(text: "9", owner: calculator)
                         }
                         
-                        HStack(spacing: 2.0) {
+                        HStack(spacing: hSpacing) {
                             BigButton(text: "4", owner: calculator)
                             BigButton(text: "5", owner: calculator)
                             BigButton(text: "6", owner: calculator)
                         }
-                        HStack(spacing: 2.0) {
+                        HStack(spacing: hSpacing) {
                             BigButton(text: "1", owner: calculator)
                             BigButton(text: "2", owner: calculator)
                             BigButton(text: "3", owner: calculator)
                         }
-                        HStack(spacing: 2.0) {
+                        HStack(spacing: hSpacing) {
                             BigButton(text: "0", owner: calculator)
                             BigButton(text: ".", owner: calculator)
                             BigButton(text: "c", owner: calculator)
@@ -101,30 +101,24 @@ struct ContentView: View {
                         }
                     }
                     
-                    VStack(spacing: 5) {
+                    VStack(spacing: 3) {
                         SmallButton(text: "⨉", owner: calculator)
                         SmallButton(text: "–", owner: calculator)
                         SmallButton(text: "+", owner: calculator)
                         Image("equal")
                             .clipShape(RoundedRectangle(cornerSize: CGSize(width: SmallButton.diameter/2, height: SmallButton.diameter/2)))
+                            .offset(x: 0, y: -1)
                             .onTapGesture {
                                 calculator.fire(key: "=")
                             }
-                    }
+                    }.frame(alignment: .top)
                 }
 
-                Spacer()
-                    .frame(width: ContentView.innerWidth, height: 5, alignment: .bottom)
-                
-            }
-            .background(Color(white:0.75, opacity: 1.0))
-            .clipShape(RoundedRectangle(cornerRadius: 10.0))
-            .position(x: ContentView.outerWidth/2, y: ContentView.outerHeight/2)
-            .frame(width: ContentView.innerWidth, height: ContentView.innerHeight, alignment: .bottom)
-            
+                Spacer().frame(width: width/2, height: 5, alignment: .bottom)
         }
-        .frame(width: ContentView.outerWidth, height: ContentView.outerHeight, alignment: .center)
-        .background(Color("bezelColor"))
+        .background(Image(nsImage: backgroundImage).frame( alignment: .center))
+        .scaledToFill()
+        .frame(width: width, height: height, alignment: .center)
         .clipShape(RoundedRectangle(cornerRadius: 10.0))
     }
 }

@@ -44,6 +44,93 @@ enum CalculatorState: CustomStringConvertible {
     }
 }
 
+struct ActiveExpression {
+    var content: String
+    var decimalSet = false
+    
+    static let ERROR_STRING = "ERROR"
+    
+    var doubleValue: Double {
+        assert(content != ActiveExpression.ERROR_STRING, "Do not allow conversion to double on error condition!")
+        if content.isEmpty { return 0 }
+        if content.hasPrefix(".") {
+            return Double("0" + content)!
+        } else {
+            return Double(content)!
+        }
+    }
+    
+    func format(_ answer: Double) -> String {
+        if (answer == 0) {
+            return "0"
+        }
+
+        let intDigitCount = Int(log10(answer).rounded())
+        
+        // allow many digits until a limit than move to 1 digit, decimal, and scientific notation
+        if intDigitCount < Calculator.MAX_DIGITS {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+            formatter.alwaysShowsDecimalSeparator = decimalSet
+            formatter.hasThousandSeparators = true
+            formatter.maximumIntegerDigits = intDigitCount + 1
+            formatter.maximumFractionDigits = Calculator.MAX_DIGITS - formatter.maximumIntegerDigits
+            return formatter.string(from: NSNumber(value: answer))!
+        } else {
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .scientific
+            formatter.alwaysShowsDecimalSeparator = true
+            formatter.hasThousandSeparators = false
+            formatter.maximumIntegerDigits = 1
+            formatter.maximumFractionDigits = Calculator.MAX_DIGITS - 6 // 1 or 0 . then E+/-###
+            return formatter.string(from: NSNumber(value: answer))!
+        }
+    }
+    
+    var formatted: String {
+        if content == ActiveExpression.ERROR_STRING {
+            return ActiveExpression.ERROR_STRING
+        }
+        if content.isEmpty {
+            return "0"
+        }
+        return format(doubleValue)
+    }
+    
+    var count: Int {
+        content.count
+    }
+    
+    mutating func reset() {
+        content = ""
+        decimalSet = false
+    }
+    
+    init(from: Double) {
+        self.content = String(from)
+    }
+    
+    mutating func set(fromValue value: Double) {
+        self.content = String(value)
+    }
+    
+    mutating func set(content: String) {
+        self.content = content
+    }
+    
+    mutating func append(_ content: String) {
+        self.content += content
+    }
+    
+    init(content: String) {
+        self.content = content
+    }
+    
+    mutating func raiseError() {
+        self.content = ActiveExpression.ERROR_STRING
+    }
+}
+
 
 class Calculator: ObservableObject {
     
@@ -51,10 +138,10 @@ class Calculator: ObservableObject {
         return string == self.operation
     }
     
-    static let MAX_DIGITS = 12
+    static let MAX_DIGITS = 11
     
-    var previousExpression: String = "0"
-    var currentExpression: String = "0"
+    var previousExpression: Double = 0.0
+    var currentExpression = ActiveExpression(content: "")
     var operation: String = ""
     var state = CalculatorState.Empty
     var previousState: CalculatorState? = .Empty
@@ -74,8 +161,8 @@ class Calculator: ObservableObject {
     }
     
     fileprivate func clearCalculator() {
-        currentExpression = "0"
-        previousExpression = "0"
+        currentExpression.reset()
+        previousExpression = 0.0
         operation = ""
         updateState(.Empty)
         updateState(.Empty) // empty current and previous state
@@ -83,8 +170,8 @@ class Calculator: ObservableObject {
     }
     
     fileprivate func raiseError() {
-        currentExpression = "Error!"
         updateState(.Error)
+        self.currentExpression.raiseError()
         self.objectWillChange.send()
     }
     
@@ -101,26 +188,29 @@ class Calculator: ObservableObject {
             return
         }
         if "1234567890.".contains(key) {
+            if "." == key {
+                currentExpression.decimalSet = true
+            }
             if state == .Empty {
-                currentExpression = (currentExpression == "0" ? key : currentExpression + key)
+                currentExpression.append(key)
                 updateState(.InputtingFirstNumber)
             } else if (state == .InputtingFirstNumber || state == .InputtingSecondNumber) {
                 if currentExpression.count == Calculator.MAX_DIGITS {
                     raiseError()
                 } else {
-                    currentExpression += key
+                    currentExpression.append(key)
                 }
             } else if state == .AwaitingNextNumber || state == .DisplayingIntermediateResult  {
-                previousExpression = currentExpression
-                currentExpression = key
+                previousExpression = currentExpression.doubleValue
+                currentExpression.set(content: key)
                 updateState(.InputtingSecondNumber)
             } else if state == .DisplayingResult {
-                previousExpression = "0"
-                currentExpression = key
+                previousExpression = 0.0
+                currentExpression.set(content: key)
                 updateState(.InputtingFirstNumber)
             } else if state == .DisplayingMemoryRecall {
                 popState()
-                currentExpression = key
+                currentExpression.set(content: key)
             }
         } else if "+–⨉÷".contains(key) {
             if state == .Empty {
@@ -131,16 +221,16 @@ class Calculator: ObservableObject {
                 updateState(.AwaitingNextNumber)
             } else if state == .InputtingSecondNumber {
                 guard let answer = evaluateOperation() else { return }
-                previousExpression = currentExpression
-                currentExpression = format(answer)
+                previousExpression = currentExpression.doubleValue
+                currentExpression = ActiveExpression(from: answer)
                 operation = key
                 updateState(.DisplayingIntermediateResult)
             } else if state == .DisplayingIntermediateResult || state == .AwaitingNextNumber {
                 if state == .AwaitingNextNumber {
-                    previousExpression = currentExpression
+                    previousExpression = currentExpression.doubleValue
                 }
                 guard let answer = evaluateOperation() else { return }
-                currentExpression = format(answer)
+                currentExpression = ActiveExpression(from: answer)
                 operation = key
                 updateState(.DisplayingIntermediateResult)
             } else if state == .DisplayingResult {
@@ -151,52 +241,34 @@ class Calculator: ObservableObject {
             clearCalculator()
         } else if key == "=" {
             if state == .AwaitingNextNumber {
-                previousExpression = currentExpression
+                previousExpression = currentExpression.doubleValue
             }
             guard let answer = evaluateOperation() else { return }
-            previousExpression = "0"
+            previousExpression = 0.0
             operation = ""
-            currentExpression = format(answer)
+            currentExpression = ActiveExpression(from: answer)
             updateState(.DisplayingResult)
         } else if ["m+", "m-", "mc", "mr"].contains(key) {
             if key == "m+" {
-                guard let current = Double(currentExpression) else { return }
-                memory += current
+                memory += currentExpression.doubleValue
             } else if key == "m-" {
-                guard let current = Double(currentExpression) else { return }
-                memory -= current
+                memory -= currentExpression.doubleValue
             } else if key == "mc" {
                 memory = 0.0
             } else if key == "mr" {
-                previousExpression = currentExpression
-                currentExpression = format(memory)
+                previousExpression = currentExpression.doubleValue
+                currentExpression.set(fromValue: memory)
                 updateState(.DisplayingMemoryRecall)
             }
         }
         self.objectWillChange.send()
     }
     
-    func format(_ answer: Double) -> String {
-        let string = String(answer)
-        
-        // integer up to a point then scientific notation
-        if string.hasSuffix(".0") && string.count <= Calculator.MAX_DIGITS {
-            return String(string[string.startIndex..<string.index(string.endIndex, offsetBy: -2)])
-            // really big numbers are always scientific
-        } else if string.count > Calculator.MAX_DIGITS {
-            let value = String(format: "%0.06g", answer)
-            return value
-            // not int and not big - regular floating point value with few digits
-        } else {
-            return string
-        }
-    }
+    
     
     func evaluateOperation() -> Double? {
-        guard let first = Double(previousExpression),
-              let second = Double(currentExpression) else {
-                  fatalError("This should not happen. Do not let current or previous be invalid current: \(currentExpression), previous: \(previousExpression)")
-              }
+        let first = previousExpression
+        let second = currentExpression.doubleValue
         let answer: Double
         
         

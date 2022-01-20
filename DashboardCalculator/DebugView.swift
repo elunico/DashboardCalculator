@@ -18,7 +18,7 @@ struct DebugVar: View {
             .fontWeight(.bold)
             .font(.system(size: 16.0))
             .foregroundColor(.gray)
-            .frame(width: 200, height: 40, alignment: .trailing)
+            .frame(width: 200, alignment: .trailing)
     }
 }
 
@@ -31,7 +31,18 @@ struct DebugValue: View {
     var body: some View {
         Text(text)
             .font(.system(size: 16.0))
-            .frame(width: 200, height: 40, alignment: .leading)
+            .frame(maxWidth:.infinity, alignment: .leading)
+    }
+}
+
+struct DebugProperty: View {
+    let key: String
+    let value: Any?
+    var body: some View {
+        HStack {
+            DebugVar(key + ": ")
+            DebugValue(String(describing: (value ?? "<nil>")))
+        }
     }
 }
 
@@ -41,35 +52,13 @@ struct DebugView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                HStack {
-                    DebugVar("Previous Expression: ")
-                    DebugValue(calculator.previousExpression)
-                }
-                HStack {
-                    DebugVar("Current Expression: ")
-                    DebugValue(calculator.currentExpression)
-                }
-                HStack {
-                    DebugVar("Previous State: ")
-                    DebugValue(calculator.previousState?.description ?? "<nil>")
-                }
-                HStack {
-                    DebugVar("Current State: ")
-                    DebugValue(calculator.state.description)
-                }
-                HStack {
-                    DebugVar("Operation: ")
-                    DebugValue(calculator.operation)
-                }
-                HStack {
-                    DebugVar("Last key pressed: ")
-                    DebugValue(calculator.lastKeyPressed ?? "<nil>")
-                }
-                HStack {
-                    DebugVar("Memory: ")
-                    DebugValue(calculator.memory.description)
-                }
-                
+                DebugProperty(key: "Previous Expression", value: calculator.previousExpression)
+                DebugProperty(key: "Current Expression", value: calculator.currentExpression)
+                DebugProperty(key: "Previous State", value: calculator.previousState)
+                DebugProperty(key: "Current State", value: calculator.state)
+                DebugProperty(key: "Operation", value: calculator.operation)
+                DebugProperty(key: "Last Key Pressed", value: calculator.lastKeyPressed)
+                DebugProperty(key: "Memory", value: calculator.memory)
             }
         }
     }

@@ -11,7 +11,6 @@ struct BigButton: View {
     @State var clicked = false
     let text: String
     let owner: Calculator
-    static let diameter = 55.0
     
     func lookup(_ text: String) -> String {
         var name = text
